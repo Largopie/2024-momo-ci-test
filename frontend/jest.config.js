@@ -8,4 +8,5 @@ module.exports = {
     customExportConditions: [''],
   },
   setupFiles: ['./jest.polyfills.js'],
+  reporters: [['github-actions', { silent: false }], 'summary'],
 };
