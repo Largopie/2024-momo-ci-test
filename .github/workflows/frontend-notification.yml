@@ -14,6 +14,6 @@ jobs:
         if: ${{ contains(github.event.pull_request.title, '[FE]') || contains(github.event.issue.title, '[FE]') }}
         run: >
           curl -X
-          POST -H "Content-Type: application/json"
-          -d "{\"content\":\"A new PR/Issue for Frontend: ${{ github.event.pull_request.title || github.event.issue.title }}\"}" \
+          POST -H 'Content-type:application/json'
+          -d '{"content":"Hello, World!"}'
           ${{ secrets.FE_DISCORD_WEBHOOK_URL }}
