@@ -14,5 +14,5 @@ jobs:
           issue_url=${{ github.event.issue.html_url }}
           issue_title=${{ github.event.issue.title }}
           curl -X POST -H "Content-Type: application/json" \
-          -d "{\"content\":\"A new Frontend Issue: [${issue_title}](${issue_url})\"}" \
+          -d "{\"content\":\"A new Frontend Issue: [$issue_title]($issue_url)\"}" \
           ${{ secrets.FE_DISCORD_WEBHOOK_URL }}

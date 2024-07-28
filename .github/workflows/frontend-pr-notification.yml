@@ -3,15 +3,13 @@ name: Frontend Discord Notification
 on:
   pull_request:
     types: [opened, reopened]
-  issues:
-    types: [opened, reopened]
 
 jobs:
   PR-Notification:
     runs-on: ubuntu-latest
     steps:
       - name: Check if the PR or Issue is for Frontend
-        if: ${{ contains(github.event.pull_request.title, '[FE]') || contains(github.event.issue.title, '[FE]') }}
+        if: ${{ contains(github.event.pull_request.title, '[FE]') }}
         run: >
           PROBLEM=$(
             echo ${{ toJson(github.event.pull_request.body) }} |
@@ -20,7 +18,7 @@ jobs:
           );
           echo "PROBLEM=$PROBLEM" >> $GITHUB_ENV
       - env:
-          if: ${{ contains(github.event.pull_request.title, '[FE]') || contains(github.event.issue.title, '[FE]') }}
+          if: ${{ contains(github.event.pull_request.title, '[FE]') }}
           DATA: >
             {
               "username": ${{ toJson(github.event.sender.login) }},
