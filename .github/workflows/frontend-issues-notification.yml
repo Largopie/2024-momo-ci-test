@@ -1,0 +1,18 @@
+name: Frontend Issue Notification
+
+on:
+  issues:
+    types: [opened, reopened]
+
+jobs:
+  Issue-Notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if the Issue is for Frontend
+        if: ${{ contains(github.event.issue.title, '[FE]') }}
+        run: |
+          issue_url=${{ github.event.issue.html_url }}
+          issue_title=${{ github.event.issue.title }}
+          curl -X POST -H "Content-Type: application/json" \
+          -d "{\"content\":\"A new Frontend Issue: [${issue_title}](${issue_url})\"}" \
+          ${{ secrets.FE_DISCORD_WEBHOOK_URL }}
