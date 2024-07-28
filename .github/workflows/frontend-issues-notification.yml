@@ -13,4 +13,3 @@ jobs:
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.FE_DISCORD_WEBHOOK_URL }}
-          content: 'A new Frontend Issue: [${{ github.event.issue.title }}](${{ github.event.issue.html_url }})'
