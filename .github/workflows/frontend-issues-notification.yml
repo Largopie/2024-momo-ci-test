@@ -8,12 +8,9 @@ jobs:
   Issue-Notification:
     runs-on: ubuntu-latest
     steps:
-      - name: Check if the Issue is for Frontend
+      - name: 프론트엔드 이슈 생성 알림 동작
         if: ${{ contains(github.event.issue.title, '[FE]') }}
-        run: |
-          ISSUE_URL=${{ github.event.issue.html_url }}
-          ISSUE_TITLE=${{ github.event.issue.title }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.FE_DISCORD_WEBHOOK_URL }}
-          curl -X POST -H "Content-Type: application/json" \
-          -d "{\"content\":\"A new Frontend Issue: [${ISSUE_TITLE}](${ISSUE_URL})\"}" \
-          $DISCORD_WEBHOOK_URL
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.FE_DISCORD_WEBHOOK_URL }}
+          content: 'A new Frontend Issue: [${ISSUE_TITLE}](${ISSUE_URL})'
