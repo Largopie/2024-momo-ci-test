@@ -12,7 +12,8 @@ jobs:
     steps:
       - name: Check if the PR or Issue is for Frontend
         if: ${{ contains(github.event.pull_request.title, '[FE]') || contains(github.event.issue.title, '[FE]') }}
-        run: |
-          curl -X POST -H "Content-Type: application/json" \
+        run: >
+          curl -X
+          POST -H "Content-Type: application/json"
           -d "{\"content\":\"A new PR/Issue for Frontend: ${{ github.event.pull_request.title || github.event.issue.title }}\"}" \
           ${{ secrets.FE_DISCORD_WEBHOOK_URL }}
