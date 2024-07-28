@@ -36,5 +36,5 @@ jobs:
         run: >
           curl -X
           POST -H 'Content-type:application/json'
-          -d '{"content":"Hello, World!"}'
+          -d "$DATA"
           ${{ secrets.FE_DISCORD_WEBHOOK_URL }}
