@@ -10,14 +10,17 @@ jobs:
   PR-Notification:
     runs-on: ubuntu-latest
     steps:
-      - run: >
+      - name: Check if the PR or Issue is for Frontend
+        if: ${{ contains(github.event.pull_request.title, '[FE]') || contains(github.event.issue.title, '[FE]') }}
+        run: >
           PROBLEM=$(
             echo ${{ toJson(github.event.pull_request.body) }} |
             grep -Pio 'http[\w\:\/\.-]+' |
             head -1
           );
           echo "PROBLEM=$PROBLEM" >> $GITHUB_ENV
-        env:
+      - env:
+          if: ${{ contains(github.event.pull_request.title, '[FE]') || contains(github.event.issue.title, '[FE]') }}
           DATA: >
             {
               "username": ${{ toJson(github.event.sender.login) }},
@@ -31,8 +34,6 @@ jobs:
                 }
               ]
             }
-        if: ${{ contains(github.event.pull_request.title, '[FE]') || contains(github.event.issue.title, '[FE]') }}
-      - name: Check if the PR or Issue is for Frontend
         run: >
           curl -X
           POST -H 'Content-type:application/json'
