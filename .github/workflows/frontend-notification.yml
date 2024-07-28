@@ -9,10 +9,33 @@ on:
 jobs:
   PR-Notification:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.title.startsWith('[FE]') || github.event.issue.title.startsWith('['FE_DISCORD_WEBHOOK_URL']')
     steps:
-      - name: Send Discord Notification for Frontend
-        run: |
-          curl -X POST -H "Content-Type: application/json" \
-          -d "{\"content\":\"A new PR/Issue for Frontend: ${{ github.event.pull_request.title || github.event.issue.title }}\"}" \
+      - name: Check if the PR or Issue is for Frontend
+        if: ${{ contains(github.event.pull_request.title, '[FE]') || contains(github.event.issue.title, '[FE]') }}
+        run: >
+          PROBLEM=$(
+            echo ${{ toJson(github.event.pull_request.body) }} |
+            grep -Pio 'http[\w\:\/\.-]+' |
+            head -1
+          );
+          echo "PROBLEM=$PROBLEM" >> $GITHUB_ENV
+      - env:
+          if: ${{ contains(github.event.pull_request.title, '[FE]') || contains(github.event.issue.title, '[FE]') }}
+          DATA: >
+            {
+              "username": ${{ toJson(github.event.sender.login) }},
+              "avatar_url": ${{ toJson(github.event.sender.avatar_url) }},
+              "embeds": [
+                {
+                  "title": ${{ toJson(github.event.pull_request.title) }},
+                  "description": "새로운 PR이 도착했습니다!\n\n${{ env.PROBLEM }}",
+                  "url": ${{ toJson(github.event.pull_request.html_url) }},
+                  "color": 6847432
+                }
+              ]
+            }
+        run: >
+          curl -X
+          POST -H 'Content-type:application/json'
+          -d "$DATA"
           ${{ secrets.FE_DISCORD_WEBHOOK_URL }}
