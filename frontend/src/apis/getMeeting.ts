@@ -14,6 +14,7 @@ export interface GetMeetingResponse {
 }
 
 // uuid 기본값은 임시 설정된 uuid
+// 코멘트 추가
 const getMeeting = async (uuid = '550e8400'): Promise<GetMeetingResponse> => {
   const url = `${API_URL}/api/v1/meeting/${uuid}`;
 
