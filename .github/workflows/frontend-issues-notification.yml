@@ -11,9 +11,9 @@ jobs:
       - name: Check if the Issue is for Frontend
         if: ${{ contains(github.event.issue.title, '[FE]') }}
         run: |
-          issue_url=${{ github.event.issue.html_url }}
-          issue_title=${{ github.event.issue.title }}
+          ISSUE_URL=${{ github.event.issue.html_url }}
+          ISSUE_TITLE=${{ github.event.issue.title }}
           DISCORD_WEBHOOK_URL: ${{ secrets.FE_DISCORD_WEBHOOK_URL }}
           curl -X POST -H "Content-Type: application/json" \
-          -d "{\"content\":\"A new Frontend Issue: [$issue_title]($issue_url)\"}" \
+          -d "{\"content\":\"A new Frontend Issue: [${ISSUE_TITLE}](${ISSUE_URL})\"}" \
           $DISCORD_WEBHOOK_URL
