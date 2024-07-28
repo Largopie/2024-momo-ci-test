@@ -1,39 +1,16 @@
-name: Frontend Discord Notification
+name: Frontend PR Discord Notification
 
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, closed]
 
 jobs:
-  PR-Notification:
+  Issue-Notification:
     runs-on: ubuntu-latest
     steps:
-      - name: Check if the PR or Issue is for Frontend
+      - name: 프론트엔드 PR 생성 및 닫힘 알림 동작
         if: ${{ contains(github.event.pull_request.title, '[FE]') }}
-        run: >
-          PROBLEM=$(
-            echo ${{ toJson(github.event.pull_request.body) }} |
-            grep -Pio 'http[\w\:\/\.-]+' |
-            head -1
-          );
-          echo "PROBLEM=$PROBLEM" >> $GITHUB_ENV
-      - env:
-          if: ${{ contains(github.event.pull_request.title, '[FE]') }}
-          DATA: >
-            {
-              "username": ${{ toJson(github.event.sender.login) }},
-              "avatar_url": ${{ toJson(github.event.sender.avatar_url) }},
-              "embeds": [
-                {
-                  "title": ${{ toJson(github.event.pull_request.title) }},
-                  "description": "새로운 PR이 도착했습니다!\n\n${{ env.PROBLEM }}",
-                  "url": ${{ toJson(github.event.pull_request.html_url) }},
-                  "color": 6847432
-                }
-              ]
-            }
-        run: >
-          curl -X
-          POST -H 'Content-type:application/json'
-          -d "$DATA"
-          ${{ secrets.FE_DISCORD_WEBHOOK_URL }}
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.FE_DISCORD_WEBHOOK_URL }}
+          content: '[${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }})'
